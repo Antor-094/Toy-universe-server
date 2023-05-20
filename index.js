@@ -52,29 +52,40 @@ async function run() {
             res.send(result)
         })
         app.get('/allToy', async (req, res) => {
-            //  console.log('working')
-            console.log(req.query.email)
-
-            let query = {}
+            let query = {};
+        
             if (req.query?.email) {
                 query = {
                     email: req.query.email
-                }
+                };
             }
-            const result = await CarToyCollection.find(query).toArray()
-
-            res.send(result)
-        })
+        
+            let sortQuery = {};
+        
+            if (req.query?.sortingOrder) {
+                const sortingOrder = req.query.sortingOrder;
+                const sortField = sortingOrder === "descending" ? -1 : 1;
+                sortQuery = {
+                    price: sortField
+                };
+            }
+        
+            const cursor = CarToyCollection.find(query).sort(sortQuery); // Apply sorting to the query
+            const result = await cursor.toArray();
+        
+            res.send(result);
+        });
+        
 
         app.put('/allToys/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) }
-            // const options = { upsert: true };
-            const options = {
+            const options = { upsert: true };
+        //     const options = {
 
-          // Include only the specific data
-          projection: { quantity: 1, price:1, description:1,_id:1},
-        };
+        //   // Include only the specific data
+        //   projection: { quantity: 1, price:1, description:1,_id:1},
+        // };
             const updatedToy = req.body;
             console.log(updatedToy)
 
