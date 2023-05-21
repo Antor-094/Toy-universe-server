@@ -5,7 +5,8 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
+// app.use(cors());
+app.use(cors())
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@phero.lyjn1mj.mongodb.net/?retryWrites=true&w=majority`;
@@ -27,12 +28,7 @@ async function run() {
 
 
 
-    await client.connect(error => {
-      if (error) {
-        console.log(error)
-        return;
-      }
-    });
+    // await client.connect();
 
     const CarToyCollection = client.db('carToyDB').collection('toysCollection');
 
